@@ -18,13 +18,11 @@ router.get('/', (req, res) => {
     include: [
       {
         model: Category,
-        attributes: [category_name]
-      }
-    ],
-    include: [
+        attributes: ['category_name']
+      },
       {
-        model: ProductTag,
-        attributes: ['product_id', 'tag_id']
+        model: Tag,
+        attributes: ['tag_name']
       }
     ]
   })
@@ -53,13 +51,11 @@ router.get('/:id', (req, res) => {
     include: [
       {
         model: Category,
-        attributes: [category_name]
-      }
-    ],
-    include: [
+        attributes: ['category_name']
+      },
       {
-        model: ProductTag,
-        attributes: ['product_id', 'tag_id']
+        model: Tag,
+        attributes: ['tag_name']
       }
     ]
   })
@@ -77,7 +73,7 @@ router.get('/:id', (req, res) => {
 });
 
 // create new product
-router.post('/', (req, res) => {
+
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -86,7 +82,14 @@ router.post('/', (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
-  Product.create(req.body)
+ router.post('/', (req, res) => {
+  Product.create({
+    product_name: req.body.product_name,
+    price: req.body.price,
+    stock: req.body.stock,
+    category_id: req.body.category_id,
+    tagIds: req.body.tagIds
+  })
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
